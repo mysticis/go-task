@@ -1,0 +1,28 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "name": "Take out the trash"
+    },
+    {
+      "id": 2,
+      "name": "Go Hiking"
+    },
+    {
+      "id": 3,
+      "name": "See some movies"
+    },
+    {
+      "id": 4,
+      "name": "Learn Go"
+    },
+    {
+      "id": 5,
+      "name": "Another task"
+    },
+    {
+      "id": 6,
+      "name": "hack in Go"
+    }
+  ]
+}
