@@ -22,7 +22,7 @@ const create = async (newTask: any) => {
       "Content-Type": "application/x-www-form-urlencoded",
     },
   });
-  console.log(response.data.task);
+
   return response.data;
 };
 
@@ -49,7 +49,6 @@ const updateTask = (id: string, taskToUpdate: any) => {
   });
   return request
     .then((response) => {
-      console.log(response);
       return response.data;
     })
     .catch((error) => console.log("error:", error));
