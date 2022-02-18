@@ -2,7 +2,10 @@ module github.com/mysticis/go-react-app
 
 go 1.17
 
-require go.mongodb.org/mongo-driver v1.8.3
+require (
+	github.com/joho/godotenv v1.4.0
+	go.mongodb.org/mongo-driver v1.8.3
+)
 
 require github.com/felixge/httpsnoop v1.0.1 // indirect
 

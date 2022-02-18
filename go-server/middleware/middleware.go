@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"github.com/mysticis/go-react-app/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -20,7 +22,6 @@ import (
 // const connectionString = "mongodb://localhost:27017"
 
 //L5RMCGqfGEAR9eF
-const connectionString = "mongodb+srv://martin:QCBxzwArCBMccZyE@joemart1.dq2id.mongodb.net/golang-react?retryWrites=true&w=majority"
 
 // Database Name
 const dbName = "golang-react"
@@ -32,7 +33,13 @@ const collName = "todolist"
 var collection *mongo.Collection
 
 func init() {
+	err := godotenv.Load()
+  if err != nil {
+    log.Fatal("Error loading .env file")
+  }
+  //secretDatabaseKey := os.Getenv("MONGODB_SECRET")
 
+	 connectionString := os.Getenv("MONGODB_SECRET")
 	// Set client options
 	clientOptions := options.Client().ApplyURI(connectionString)
 
@@ -55,6 +62,7 @@ func init() {
 	collection = client.Database(dbName).Collection(collName)
 
 	fmt.Println("Collection instance created!")
+
 }
 
 //Get all tasks
