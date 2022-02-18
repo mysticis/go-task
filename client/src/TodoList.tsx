@@ -16,6 +16,7 @@ import FormInput from "./components/FormInput";
 
 //interface
 interface TaskList {
+  _id: string;
   task: string;
   status: boolean;
 }
@@ -41,13 +42,57 @@ const TodoList = () => {
     console.log(task);
   }, []);
 
-  // Post task with
+  // create task in database
   const addTask = (taskObject: any) => {
     services.create(taskObject).then((returnedTask) => {
       setTask(task.concat(returnedTask));
     });
   };
 
+  //delete task from database
+
+  const deleteTask = (id: string) => {
+    const taskToDelete = task.find((task) => task._id === id);
+    services.deleteTask(taskToDelete?._id);
+    setTask(task.filter((task) => task._id !== id));
+  };
+
+  //update task
+
+  const updateTask = (id: any) => {
+    const taskToBeChanged = task.find((task) => task._id === id);
+    const changedTask = {
+      ...taskToBeChanged,
+      status: !taskToBeChanged?.status,
+    };
+    services
+      .updateTask(id, changedTask)
+      .then((res) =>
+        setTask(
+          task.map((task) =>
+            task._id === res ? { ...task, status: !task.status } : task
+          )
+        )
+      );
+  };
+
+  //undo task
+  const undoTasks = (id: any) => {
+    const taskToBeChanged = task.find((task) => task._id === id);
+    const changedTask = {
+      ...taskToBeChanged,
+      status: !taskToBeChanged?.status,
+    };
+    services
+      .undoTask(id, changedTask)
+      .then((res) =>
+        setTask(
+          task.map((task) =>
+            task._id === res ? { ...task, status: !task.status } : task
+          )
+        )
+      );
+  };
   return (
     <div
       style={{
@@ -74,17 +119,29 @@ const TodoList = () => {
                   }}
                 >
                   <Tooltip title="Delete">
-                    <IconButton edge="end" aria-label="delete">
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => deleteTask(task._id)}
+                    >
                       <DeleteIcon color="error" />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Undo">
-                    <IconButton edge="end" aria-label="undo">
+                    <IconButton
+                      edge="end"
+                      aria-label="undo"
+                      onClick={() => undoTasks(task._id)}
+                    >
                       <UndoIcon color="secondary" />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Done">
-                    <IconButton edge="end" aria-label="check">
+                    <IconButton
+                      edge="end"
+                      aria-label="check"
+                      onClick={() => updateTask(task._id)}
+                    >
                       <CheckCircleIcon color="success" />
                     </IconButton>
                   </Tooltip>
@@ -97,7 +154,10 @@ const TodoList = () => {
                 borderRadius: 10,
               }}
             >
-              <ListItemText primary={task.task} />
+              <ListItemText
+                primary={task.task}
+                sx={{ textDecoration: task.status ? "line-through" : "none" }}
+              />
             </ListItem>
           );
         })}
