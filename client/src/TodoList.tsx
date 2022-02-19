@@ -107,60 +107,73 @@ const TodoList = () => {
       </Typography>
       <FormInput createTask={addTask} />
       <List sx={{ width: "100%", maxWidth: 500 }}>
-        {task?.map((task, i) => {
-          return (
-            <ListItem
-              secondaryAction={
-                <Box
+        {task
+          ?.sort((a, b) => {
+            if (a.status) {
+              return 1;
+            } else if (b.status) {
+              return -1;
+            }
+            return 0;
+          })
+          .map((task, i) => {
+            return (
+              <ListItem
+                sx={{ backgroundColor: task.status ? "azure" : "" }}
+                secondaryAction={
+                  <Box
+                    sx={{
+                      "& > :not(style)": {
+                        m: 0.5,
+                      },
+                    }}
+                  >
+                    <Tooltip title="Delete">
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => deleteTask(task._id)}
+                      >
+                        <DeleteIcon color="error" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Undo">
+                      <IconButton
+                        edge="end"
+                        aria-label="undo"
+                        onClick={() => undoTasks(task._id)}
+                      >
+                        <UndoIcon color="secondary" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Done">
+                      <IconButton
+                        edge="end"
+                        aria-label="check"
+                        onClick={() => updateTask(task._id)}
+                      >
+                        <CheckCircleIcon color="success" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                }
+                key={i}
+                style={{
+                  marginBottom: 5,
+                  border: "2px solid green",
+                  borderRadius: 10,
+                }}
+              >
+                <ListItemText
+                  primary={task.task}
                   sx={{
-                    "& > :not(style)": {
-                      m: 0.5,
-                    },
+                    textDecoration: task.status ? "line-through" : "none",
+                    fontFamily: "Quicksand",
                   }}
-                >
-                  <Tooltip title="Delete">
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => deleteTask(task._id)}
-                    >
-                      <DeleteIcon color="error" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Undo">
-                    <IconButton
-                      edge="end"
-                      aria-label="undo"
-                      onClick={() => undoTasks(task._id)}
-                    >
-                      <UndoIcon color="secondary" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Done">
-                    <IconButton
-                      edge="end"
-                      aria-label="check"
-                      onClick={() => updateTask(task._id)}
-                    >
-                      <CheckCircleIcon color="success" />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              }
-              key={i}
-              style={{
-                marginBottom: 5,
-                border: "2px solid green",
-                borderRadius: 10,
-              }}
-            >
-              <ListItemText
-                primary={task.task}
-                sx={{ textDecoration: task.status ? "line-through" : "none" }}
-              />
-            </ListItem>
-          );
-        })}
+                />
+              </ListItem>
+            );
+          })}
       </List>
     </div>
   );
